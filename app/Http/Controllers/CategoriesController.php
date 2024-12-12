@@ -70,7 +70,7 @@ class CategoriesController extends Controller
 
         if ($request->has('category_name')) {
             $cateName = $request->category_name;
-            $request->flash(); 
+            $request->flash();
             // set session flash
 
             return redirect(route('categories.add'));
@@ -85,8 +85,32 @@ class CategoriesController extends Controller
         return 'Submit xáo chuyên mục' . $id;
     }
 
+    public function getFile()
+    {
+
+        return view('clients/categories/file');
+    }
+
     // xu ly lay thong tin file
-    public function handleFile(Request $request) {
-        
+    public function handleFile(Request $request)
+    {
+        // $file = $request->file('photo');
+        if ($request->hasFile('photo')) {
+            if ($request->photo->isValid()) {
+                $file = $request->photo;
+                // $path = $file->path();
+                $ext = $file->extension();
+                // $path = $file->store('file-txt', 'local');
+                // $path = $file->storeAs('file-txt', 'khoa-hoc.txt');
+                // $fileName = $file->getClientOriginalName();
+
+                $fileName = md5(uniqid()).'.'.$ext;
+                dd($fileName);
+            } else {
+                return 'Upload khong thanh cong';
+            }
+        } else {
+            return 'Vui long chon file';
+        }
     }
 }
