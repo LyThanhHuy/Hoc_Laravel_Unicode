@@ -17,13 +17,21 @@ class CheckLoginAdmin
     public function handle(Request $request, Closure $next)
     {
         // echo 'middleware request';
-        if (!$this->isLogin()) {
-            return redirect(route('home'));
-        }
+
+        // if (!$this->isLogin()) {
+        //     return redirect(route('home'));
+        // }
+
+        // dd($request);
+        // if($request->is('admin/*') || $request->is('admin')) {
+        //     echo '<h3>Khu vuc quan tri</h3>';
+        // }
+
         return $next($request);
     }
 
-    public function isLogin() {
+    public function isLogin()
+    {
         return false;
     }
 }
