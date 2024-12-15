@@ -15,13 +15,17 @@
     @include('clients.contents.slide')
     @include('clients.contents.about')
 
-
     @env('production')
-        <p>Moi truong dev</p>
+    <p>Moi truong dev</p>
     @elseenv('local')
-        <p>Khong phai moi truong dev</p>   
+        <p>Khong phai moi truong dev</p>
     @endenv
 
+    <x-alert type='info' :content="$message" data-icon="youtube"/>
+
+    {{-- <x-inputs.button/>
+    <x-forms.button /> --}}
+    {{-- <x-form-button /> --}}
 @endsection
 
 @section('css')
