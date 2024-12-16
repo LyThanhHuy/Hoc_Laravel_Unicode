@@ -4,42 +4,47 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-use Illuminate\Support\Facades\View;
-
 class HomeController extends Controller
 {
     //
+    public $data = [];
     public function index()
     {
-        // return 'Home';
-        $title = 'Hoc lap trinh web tai unicode';
-        $content = 'Hoc lap trinh laravel 8x tai unicode';
-
-        // $dataView = [
-        //     'titleData' => $title,
-        //     'contentData' => $content
-        // ];
-        // return view('home', compact('title', 'content'));
-        // return view('home')->with('title', $title);
-        return view('home')->with(['title'=>$title, 'content'=>$content]);
-        // return View::make('home')->with(['title' => $title, 'content' => $content]);
-
-        // $contentView = view('home')->render();
-        // // $contentView = $contentView->render();
-        // return $contentView;
+        $this->data['title'] = 'Dao tao lap trinh web';
+        $this->data['message'] = 'Đăng kí tài khoản thành công';
+        return view('clients.home', $this->data);
     }
 
-    public function getNews()
+    public function products()
     {
-        return 'Danh sach tin tuc';
+        $this->data['title'] = 'San pham';
+        return view('clients.products', $this->data);
     }
 
-    public function getCategories($id)
+    public function getAdd()
     {
-        return 'Danh sach tin tuc new' . $id;
+        $this->data['title'] = 'Thêm sản phẩm';
+        return view('clients.add', $this->data);
     }
 
-    public function getProductDetail($id) {
-        return view('clients.products.detail', compact('id'));
+    public function postAdd(Request $request)
+    {
+        dd($request);
+    }
+
+    public function putAdd(Request $request)
+    {
+        dd($request);
+    }
+
+    public function getArr()
+    {
+        $contentArr = [
+            'name' => 'Laravel',
+            'lesson' => 'Khóa học lập trình laravel',
+            'academy' => 'Unicode Academy'
+        ];
+
+        return $contentArr;
     }
 }
