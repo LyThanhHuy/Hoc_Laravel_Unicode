@@ -47,4 +47,23 @@ class HomeController extends Controller
 
         return $contentArr;
     }
+
+    public function downloadImage(Request $request)
+    {
+        // dd($request->image);
+        if (!empty($request->image)) {
+            $image = trim($request->image);
+
+            $fileName = 'image_'.uniqid().'.jpg';
+            // $fileName = basename($image);
+            // return response()->download($image);
+
+            // return response()->streamDownload(function () use ($image) {
+            //     $imageContent = file_get_contents($image);
+            //     echo $imageContent;
+            // }, $findName);
+
+            return response()->download($image, $fileName);
+        }
+    }
 }

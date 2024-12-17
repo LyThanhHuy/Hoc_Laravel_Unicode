@@ -34,20 +34,29 @@ Route::put('/them-san-pham', [HomeController::class, 'putAdd']);
 
 Route::get('lay-thong-tin', [HomeController::class, 'getArr']);
 
-Route::get('demo-response', function () {
-    // $response = new Response('Hoc lap trinh tai unicode', 200);
-    // $response = response('Hoc lap trinh tai unicode', 404);
-    // return new Response('Hoc lap trinh tai unicode', 404);
-    // $content = 'Học lập trình tại unicode';
-    // $content = json_encode([
-    //     'Item 1',
-    //     'Item 2',
-    //     'item 3'
-    // ]);
-    // $response = (new Response($content))->header('Content-Type', 'application/json');
+// Route::get('demo-response', function () {
+//     $contentArr = [
+//         'name' => 'Unicode',
+//         'version' => 'Laravel 8x',
+//         'lesson' => 'HTTP Laravel'
+//     ];
+//     return response()->json($contentArr, 201)->header("Api-Key", '1234');
 
-    $response = response()->view('clients.demo-test', [
-        'title' => 'Hoc HTTP Response'
-    ], 201)->header('Content-Type', 'application/json')->header('API-Key', '123456');
-    return $response;
+//     return '<h2>Welcome to Unicode</h2>';
+// });
+
+Route::get('demo-response', function () {
+    echo old('username');
+    return view('clients.demo-test');
+})->name('demo-response');
+
+Route::post('demo-response', function (Request $request) {
+    if(!empty($request->username)) {
+        // return redirect(route('demo-response'))->with('');
+        return back()->withInput()->with('mess', 'Validate thanh cong');
+    }
+
+    return redirect(route('demo-response'))->with('mess', 'Validate khong thanh cong');
 });
+
+Route::get('download-image', [HomeController::class, 'downloadImage'])->name('download-image');
