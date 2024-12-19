@@ -54,7 +54,7 @@ class HomeController extends Controller
         // $request->validate($rules, $message);
 
 
-        dd($request);
+        dd($request->all());
     }
 
     public function putAdd(Request $request)

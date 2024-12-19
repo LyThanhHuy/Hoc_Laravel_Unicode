@@ -12,11 +12,17 @@
         {{-- <input type="text" name="username" /> --}}
         {{-- <input type="hidden" name="_token" value="{{ csrf_token() }}"> --}}
 
-        @if ($errors->any())
+        {{-- @if ($errors->any())
             <div class="alert alert-danger text-center">
                 {{ $errorMessage }}
             </div>
-        @endif
+        @endif --}}
+
+        @error('msg')
+            <div class="alert alert-danger text-center">
+                {{ $message }}
+            </div>
+        @enderror
 
         <div class="mb-3">
             <label for="">Ten san pham</label>
