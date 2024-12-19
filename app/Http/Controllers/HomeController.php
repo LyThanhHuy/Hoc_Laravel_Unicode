@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ProductRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class HomeController extends Controller
 {
@@ -31,30 +32,47 @@ class HomeController extends Controller
         return view('clients.add', $this->data);
     }
 
-    public function postAdd(ProductRequest $request)
+    public function postAdd(Request $request)
     {
-        // $rules = [
-        //     'product_name' => 'required|min:6',
-        //     'product_price' => 'required|integer'
-        // ];
+        $rules = [
+            'product_name' => 'required|min:6',
+            'product_price' => 'required|integer'
+        ];
 
-        // $message = [
+        // $messages = [
         //     'product_name.required' => 'Ten san pham bat buoc phair nhap',
         //     'product_name.min' => 'Ten san pham khong duoc nho hon 6 ki tu',
         //     'product_name.required' => 'Gia san pham bat buoc phia nhap',
         //     'product_name.integer' => 'Gia san pham phai la 1 so'
         // ];
 
-        // $message = [
-        //     'required' => 'Truong :attribute bat buoc phai nhap',
-        //     'min' => 'Truong :attribute khong duoc nho hon :min ki tu',
-        //     'integer' => 'Truong :attribute phai la so'
-        // ];
+        $messages = [
+            'required' => 'Truong :attribute bat buoc phai nhap',
+            'min' => 'Truong :attribute khong duoc nho hon :min ki tu',
+            'integer' => 'Truong :attribute phai la so'
+        ];
+
+        $attributes = [
+            'product_name' => 'Ten san pham',
+            'product_price' => 'Gia san pham'
+        ];
 
         // $request->validate($rules, $message);
 
+        $validator = Validator::make($request->all(), $rules, $messages, $attributes);
+        // $validator->validate();
 
-        dd($request->all());
+        if ($validator->fails()) {
+            $validator->errors()->add('msg', 'Vui long kiem tra lai du lieu');
+            // return 'validate that bai';
+        } else {
+            // return 'validate thanh cong';
+            return redirect()->route('product')->with('msg', 'validate thanh cong');
+        }
+
+        return back()->withErrors($validator);
+
+        // dd($validate);
     }
 
     public function putAdd(Request $request)

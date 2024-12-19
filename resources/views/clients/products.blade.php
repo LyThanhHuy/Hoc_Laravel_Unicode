@@ -10,8 +10,12 @@
 @endsection --}}
 
 @section('content')
+    @if (@session('msg'))
+        <div class="alert alert-success">
+            {{ session('msg') }}
+        </div>
+    @endif
     <h1>San Pham</h1>
-    <x-package-alert />
     @push('scripts')
         <script>
             console.log("Push lan 2")
@@ -29,4 +33,4 @@
     <script>
         console.log("Push lan 1")
     </script>
-@endprepend('scripts')
+@endprepend
