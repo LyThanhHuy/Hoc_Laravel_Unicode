@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ProductRequest;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -30,27 +31,30 @@ class HomeController extends Controller
         return view('clients.add', $this->data);
     }
 
-    public function postAdd(Request $request)
+    public function postAdd(ProductRequest $request)
     {
-        $rules = [
-            'product_name' => 'required|min:6',
-            'product_price' => 'required|integer'
-        ];
+        // $rules = [
+        //     'product_name' => 'required|min:6',
+        //     'product_price' => 'required|integer'
+        // ];
 
-        $message = [
-            'product_name.required' => 'Ten san pham bat buoc phair nhap',
-            'product_name.min' => 'Ten san pham khong duoc nho hon 6 ki tu',
-            'product_name.required' => 'Gia san pham bat buoc phia nhap',
-            'product_name.integer' => 'Gia san pham phai la 1 so'
-        ];
+        // $message = [
+        //     'product_name.required' => 'Ten san pham bat buoc phair nhap',
+        //     'product_name.min' => 'Ten san pham khong duoc nho hon 6 ki tu',
+        //     'product_name.required' => 'Gia san pham bat buoc phia nhap',
+        //     'product_name.integer' => 'Gia san pham phai la 1 so'
+        // ];
 
-        $message = [
-            'required' => 'Truong :attribute bat buoc phai nhap',
-            'min' => 'Truong :attribute khong duoc nho hon :min ki tu',
-            'integer' => 'Truong :attribute phai la so'
-        ];
+        // $message = [
+        //     'required' => 'Truong :attribute bat buoc phai nhap',
+        //     'min' => 'Truong :attribute khong duoc nho hon :min ki tu',
+        //     'integer' => 'Truong :attribute phai la so'
+        // ];
 
-        $request->validate($rules, $message);
+        // $request->validate($rules, $message);
+
+
+        dd($request);
     }
 
     public function putAdd(Request $request)
