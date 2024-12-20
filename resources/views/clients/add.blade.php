@@ -8,7 +8,7 @@
 
 @section('content')
     <h1>Thêm sản phẩm</h1>
-    <form action="" method="POST">
+    <form action="" method="POST" id="product-form">
         {{-- <input type="text" name="username" /> --}}
         {{-- <input type="hidden" name="_token" value="{{ csrf_token() }}"> --}}
 
@@ -56,4 +56,15 @@
 @endsection
 
 @section('js')
+    <script>
+        $(document).ready(function() {
+            $('#product-form').on('submit', function(e) {
+                e.preventDefault();
+
+                let productName = $('input[name="product_name"]').val().trim();
+
+                alert(productName);
+            });
+        });
+    </script>
 @endsection
