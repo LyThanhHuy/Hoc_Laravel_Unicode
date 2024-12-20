@@ -6,6 +6,8 @@ use App\Http\Requests\ProductRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
+use App\Rules\Uppercase;
+
 class HomeController extends Controller
 {
     //
@@ -35,8 +37,8 @@ class HomeController extends Controller
     public function postAdd(Request $request)
     {
         $rules = [
-            'product_name' => 'required|min:6',
-            'product_price' => 'required|integer'
+            'product_name' => ['required', 'min:6', new Uppercase],
+            'product_price' => ['required', 'integer', new Uppercase]
         ];
 
         // $messages = [
@@ -49,7 +51,8 @@ class HomeController extends Controller
         $messages = [
             'required' => 'Truong :attribute bat buoc phai nhap',
             'min' => 'Truong :attribute khong duoc nho hon :min ki tu',
-            'integer' => 'Truong :attribute phai la so'
+            'integer' => 'Truong :attribute phai la so',
+            'uppercase' => 'Truong :attribute phai viet hoa'
         ];
 
         $attributes = [
