@@ -53,13 +53,15 @@ class Users extends Model
         DB::enableQueryLog();
         // Lay tat ca ban ghi cua table
         $id = 20;
-        $lists = DB::table($this->table)
-            ->select('fullname as hoten', 'email', 'id', 'update_at')
-            // ->where(function ($query) use ($id) {
-            //     $query->where('id', '<', $id)->orWhere('id', '>', $id);
-            // })
-            // ->where('id', 18)
-            ->where('fullname', 'like', '%huy%')
+        // $lists = DB::table($this->table)
+        //     ->select('fullname as hoten', 'email', 'id', 'update_at', 'create_at')
+        //     ->whereDate('update_at', '2024-12-03')
+        //     ->get();
+
+
+        $lists = DB::table('users')
+            ->select('users.*', 'groups.name as group_name')
+            ->join('groups', 'users.group_id', '=', 'groups.id')
             ->get();
 
         dd($lists);
