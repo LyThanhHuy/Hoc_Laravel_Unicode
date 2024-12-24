@@ -53,18 +53,38 @@ class Users extends Model
         DB::enableQueryLog();
         // Lay tat ca ban ghi cua table
         $id = 20;
-        // $lists = DB::table($this->table)
-        //     ->select('fullname as hoten', 'email', 'id', 'update_at', 'create_at')
-        //     ->whereDate('update_at', '2024-12-03')
-        //     ->get();
 
 
-        $lists = DB::table('users')
-            ->select('users.*', 'groups.name as group_name')
-            ->join('groups', 'users.group_id', '=', 'groups.id')
-            ->get();
+        // $status = DB::table('users')->insert([
+        //     'fullname' => 'Nguyen Van An',
+        //     'email' => 'nguyenvanan@gmail.com',
+        //     'group_id' => 1,
+        //     'create_at' => date('Y-m-d H:i:s')
+        // ]);
 
-        dd($lists);
+        // $lastId = DB::getPdo()->lastInsertId();
+
+        // $lastId = DB::table('users')->insertGetId([
+        //     'fullname' => 'Nguyen Van An',
+        //     'email' => 'nguyenvanan@gmail.com',
+        //     'group_id' => 1,
+        //     'create_at' => date('Y-m-d H:i:s')
+        // ]);
+
+        // dd($lastId);
+
+        $status = DB::table('users')
+            ->where('id', 11)
+            ->update([
+                'fullname' => 'Nguyen Van B',
+                'email' => 'b@gmail.com',
+                'update_at' => date('Y-m-d H:i:s')
+            ]);
+
+        
+
+        dd($status);
+
         $sql = DB::getQueryLog();
         dd($sql);
 
