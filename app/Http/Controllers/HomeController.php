@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Validator;
 
 use App\Rules\Uppercase;
 
+use Illuminate\Support\Facades\DB;
+
 class HomeController extends Controller
 {
     //
@@ -16,12 +18,22 @@ class HomeController extends Controller
     {
         $this->data['title'] = 'Dao tao lap trinh web';
         $this->data['message'] = 'Đăng kí tài khoản thành công';
+
+        // $users = DB::select('SELECT * FROM users WHERE email=:email', [
+        //     'email' => 'hoangan@gmail.com'
+        // ]);
+
+        // dd($users);
+
         return view('clients.home', $this->data);
     }
 
     public function products()
     {
         $this->data['title'] = 'San pham';
+
+        
+
         return view('clients.products', $this->data);
     }
 
@@ -34,27 +46,18 @@ class HomeController extends Controller
         return view('clients.add', $this->data);
     }
 
-    public function postAdd(Request $request)
+    public function postAdd(ProductRequest $request)
     {
+
         $rules = [
-            'product_name' => ['required', 'min:6', function ($attributes, $value, $fail) {
-                isUppercase($value, 'Truong :attribute khong hop le', $fail);
-            }],
+            'product_name' => ['required', 'min:6'],
             'product_price' => ['required', 'integer']
         ];
-
-        // $messages = [
-        //     'product_name.required' => 'Ten san pham bat buoc phair nhap',
-        //     'product_name.min' => 'Ten san pham khong duoc nho hon 6 ki tu',
-        //     'product_name.required' => 'Gia san pham bat buoc phia nhap',
-        //     'product_name.integer' => 'Gia san pham phai la 1 so'
-        // ];
 
         $messages = [
             'required' => 'Truong :attribute bat buoc phai nhap',
             'min' => 'Truong :attribute khong duoc nho hon :min ki tu',
-            'integer' => 'Truong :attribute phai la so',
-            'uppercase' => 'Truong :attribute phai viet hoa'
+            'integer' => 'Truong :attribute phai la so'
         ];
 
         $attributes = [
@@ -64,20 +67,24 @@ class HomeController extends Controller
 
         // $request->validate($rules, $message);
 
-        $validator = Validator::make($request->all(), $rules, $messages, $attributes);
+        // $validator = Validator::make($request->all(), $rules, $messages, $attributes);
         // $validator->validate();
 
-        if ($validator->fails()) {
-            $validator->errors()->add('msg', 'Vui long kiem tra lai du lieu');
-            // return 'validate that bai';
-        } else {
-            // return 'validate thanh cong';
-            return redirect()->route('product')->with('msg', 'validate thanh cong');
-        }
+        // $request->validate($rules, $messages);
 
-        return back()->withErrors($validator);
+        return response()->json(['status'=>'success']);
 
-        // dd($validate);
+        // $validator->validate();
+
+        // if ($validator->fails()) {
+        //     $validator->errors()->add('msg', 'Vui long kiem tra lai du lieu');
+        //     // return 'validate that bai';
+        // } else {
+        //     // return 'validate thanh cong';
+        //     return redirect()->route('product')->with('msg', 'validate thanh cong');
+        // }
+
+        // return back()->withErrors($validator);
     }
 
     public function putAdd(Request $request)
@@ -95,5 +102,4 @@ class HomeController extends Controller
 
         return $contentArr;
     }
-
 }
