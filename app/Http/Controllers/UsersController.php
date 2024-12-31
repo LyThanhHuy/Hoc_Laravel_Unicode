@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UserRequest;
+use App\Models\Groups;
+use App\Models\Phone;
 use App\Models\Users;
 use Illuminate\Http\Request;
 
@@ -11,53 +14,99 @@ class UsersController extends Controller
 {
     //
     private $users;
+    const _PER_PAGE = 4;
 
     public function __construct()
     {
         $this->users = new Users();
     }
 
-    public function index()
+    public function index(Request $request)
     {
         // $statement = $this->users->statementUser("DELETE FROM users");
         // dd($statement);
 
         $title = 'Danh sach nguoi dung';
 
-        $this->users->learnQueryBuilder();
+        // $this->users->learnQueryBuilder();
 
-        $users = new Users();
+        $filters = [];
 
-        $usersList = $this->users->getAllUsers();
+        $keywords = null;
 
-        return view('clients.users.lists', compact('title', 'usersList'));
+        if (!empty($request->status)) {
+            $status = $request->status;
+            if ($status === 'active') {
+                $status = 1;
+            } else {
+                $status = 0;
+            }
+            $filters[] = [
+                'users.status',
+                '=',
+                $status
+            ];
+        }
+
+        if (!empty($request->group_id)) {
+            $groupId = $request->group_id;
+
+            $filters[] = [
+                'users.group_id',
+                '=',
+                $groupId
+            ];
+        }
+
+        if (!empty($request->keywords)) {
+            $keywords = $request->keywords;
+        }
+
+        // xu ly logic sap xep
+        // $sortBy = 'fullname';
+        $sortBy = $request->input('sort-by');
+        $sortType = $request->input('sort-type');
+        $allowSort = ['asc', 'desc'];
+
+        if (!empty($sortType) && in_array($sortType, $allowSort)) {
+            if ($sortType == 'desc') {
+                $sortType = 'asc';
+            } else {
+                $sortType = 'desc';
+            }
+        } else {
+            $sortType = 'asc';
+        }
+
+        $sortArray = [
+            'sortBy' => $sortBy,
+            'sortType' => $sortType
+        ];
+        $usersList = $this->users->getAllUsers($filters, $keywords, $sortArray, self::_PER_PAGE);
+        return view('clients.users.lists', compact('title', 'usersList', 'sortType'));
     }
 
     public function add()
     {
         $title = 'Them nguoi dung';
 
-        return view('clients.users.add', compact('title'));
+        $allGroups = getAllGroups();
+
+        return view('clients.users.add', compact('title', 'allGroups'));
     }
 
-    public function postAdd(Request $request)
+    public function postAdd(UserRequest $request)
     {
-        $request->validate([
-            'fullname' => 'required|min:5',
-            'email' => 'required|email|unique:users'
-        ], [
-            'fullname.required' => 'Ten bat buoc phai nhap',
-            'fullname.min' => 'Ho va ten phai tu :min ki tu tro len',
-
-            'email.required' => 'Email bat buoc phai nhap',
-            'email.email' => 'Email khong dung dinh dang',
-            'email.unique' => 'Email da to tai tren he thong'
-        ]);
 
         $dataInsert = [
-            $request->fullname,
-            $request->email,
-            date('Y-m-d H:i:s')
+            // $request->fullname,
+            // $request->email,
+            // date('Y-m-d H:i:s')
+            'fullname' => $request->fullname,
+            'email' => $request->email,
+            'group_id' => $request->group_id,
+            'status' => $request->status,
+            'create_at' => date('Y-m-d H:i:s')
         ];
 
         $this->users->addUser($dataInsert);
@@ -81,31 +130,24 @@ class UsersController extends Controller
             return redirect()->route('users.index')->with('msg', 'Lien ket khong ton tai');
         }
 
-        return view('clients.users.edit', compact('title', 'userDetail'));
+        $allGroups = getAllGroups();
+
+        return view('clients.users.edit', compact('title', 'userDetail', 'allGroups'));
     }
 
-    public function postEdit(Request $request)
+    public function postEdit(UserRequest $request)
     {
         $id = session('id');
         if (empty($id)) {
             return back()->with('msg', 'Lien ket khong ton tai');
         }
-        $request->validate([
-            'fullname' => 'required|min:5',
-            'email' => 'required|email|unique:users,email,' . $id
-        ], [
-            'fullname.required' => 'Ten bat buoc phai nhap',
-            'fullname.min' => 'Ho va ten phai tu :min ki tu tro len',
-
-            'email.required' => 'Email bat buoc phai nhap',
-            'email.email' => 'Email khong dung dinh dang',
-            'email.unique' => 'Email da to tai tren he thong'
-        ]);
 
         $dataUpdate = [
-            $request->fullname,
-            $request->email,
-            date('Y-m-d H:i:s')
+            'fullname' => $request->fullname,
+            'email' => $request->email,
+            'group_id' => $request->group_id,
+            'status' => $request->status,
+            'update_at' => date('Y-m-d H:i:s')
         ];
 
         $this->users->updateUser($dataUpdate, $id);
@@ -134,5 +176,36 @@ class UsersController extends Controller
         }
 
         return redirect()->route('users.index')->with('msg', $msg);
+    }
+
+    public function relations()
+    {
+        // $phone = Users::find(18)->phone;
+        // $idPhone = $phone->id;
+        // $phoneNumber = $phone->phone;
+        // echo 'id phone:' . $idPhone . '<br/>';
+        // echo 'phone number:' . $phoneNumber . '<br/>';
+
+        // $phone = Users::find(18)->phone();
+        // dd($phone);
+
+        // $user = Phone::where('phone', '0123456789')->first()->user;
+        // $fullName = $user->fullname;
+        // $email = $user->email;
+
+        // echo 'Fullname: '.$fullName.'<br/>';
+        // echo 'Email: ' . $email . '<br/>';
+
+        // $users = Groups::find(1)->users()->where('email', 'D@gmail.com')->get();
+
+        // if ($users->count() > 0) {
+        //     foreach ($users as $item) {
+        //         echo $item->fullname . '<br/>';
+        //     }
+        // }
+
+        $group = Users::find(4)->group;
+        $groupName = $group->name;
+        dd($groupName);
     }
 }
